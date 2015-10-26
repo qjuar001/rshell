@@ -1,19 +1,30 @@
 #include <iostream>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <vector>
 #include <unistd.h>
 #include <stdio.h>
-#include <string>
+#include <string.h>
 #include <sstream>
 
 using namespace std;
 
+void exec( char **ptrArr );
+void parse( char * arr, char ** ptArr );
+
 int main(int argc, char * argv[])
 {
 
+  char input_cmd[1024];
+  char * args[64];
   char *name;
   char hostname[1024];
   int host;
   bool exit = false;
+  string cmd;
 
 //Get the users login name and checks for an error
   name = getlogin();
@@ -28,7 +39,6 @@ int main(int argc, char * argv[])
 
   while (!exit)
   {
-    string cmd;
     
     //Prints the user and hostname and gets input and assigns it to cmd
     cout << '[';
@@ -36,23 +46,61 @@ int main(int argc, char * argv[])
     cout << ']';
     cout << "$ ";
     getline(cin, cmd); 
-
-    //Create an Istringstream in order to parse the string into a vector
-    istringstream ps(cmd);
-    vector<string> parse_cmd;
-    string tmp;
-
-    while (ps >> tmp)
-    {
-      parse_cmd.push_back(tmp);
-    }
-
+    strncpy(input_cmd, cmd.c_str(), sizeof(input_cmd)); 
+    input_cmd[sizeof(input_cmd) - 1] = 0;
+    printf("\n");
+    parse( input_cmd, args);
+    
     //IF user types exit it will end the program
     if (cmd == "exit")
       exit = true;
-
+    
+    exec(args);
   }
-
+  
   return 0;
 }
 
+void parse( char *arr, char** ptArr )
+{
+  while ( *arr != '\0' )
+  {
+    while( *arr == ' ' || *arr == '\t' || *arr == '\n')
+      *arr++ = '\0';
+    *ptArr++ = arr;
+    while( *arr == ' ' && *arr == '\t' && *arr == '\n')
+      *arr++;   
+  }
+  *ptArr = '\0';
+}
+
+void exec( char** ptrArr )
+{
+  pid_t c_pid, pid;
+  int status;
+
+  c_pid = fork();
+  
+  if( c_pid < 0)
+  {
+    perror("fork failed");
+    exit(1);
+  }
+
+  else if (c_pid == 0)
+  {
+    printf("Child: executing ls\n");
+    execvp(*ptrArr, ptrArr);
+    perror("execve failed");
+  }
+
+  else if (c_pid > 0)
+  {
+    if( (pid = wait(&status)) < 0)
+    {
+      perror("wait");
+      exit(1);
+    }
+    printf("Parent: finished\n");
+  }
+}
