@@ -48,19 +48,50 @@ void  execute(char **argv)
 
 int  main()
 {
-     char  line[1024];             /* the input line                 */
-     char  *argv[64];              /* the command line argument      */
-     string cmd;
-     while (1) {                   /* repeat until done ....         */
-          printf("Shell -> ");     /*   display a prompt             */
-          getline(cin, cmd);               /*   read in the command line     */
-          strncpy(line, cmd.c_str(), sizeof(line));
-          line[sizeof(line) - 1] = 0;
-          printf("\n");
-          parse(line, argv);       /*   parse the line               */
-          if (strcmp(argv[0], "exit") == 0)  /* is it an "exit"?     */
-               exit(0);            /*   exit if it is                */
-          execute(argv);           /* otherwise, execute the command */
-     }
+  char  line[1024];             // the input line
+  char  *argv[64];              // the command line argument      
+  char *name;                   // char string to hold login name
+  char hostname[1024];          // char array to hold hostname
+  int host;                     // variable to deterimine if successful
+  string cmd;                   // string that holds command line
+
+//Get the users login name and checks for an error
+  name = getlogin();
+  if (name == '\0')
+    perror("getlogin() error");
+ 
+//Get the users hostname and checks for an error
+  hostname[1023] = '\0';
+  host = gethostname(hostname, 1023);
+  if (host == -1)
+    perror("gethostname() error");
+
+//Loop through shell until exit is typed
+  while (1) 
+  {
+
+//Print out the command line
+    cout << '[';
+    printf(name, hostname);
+    cout << ']';
+    cout << "$ ";
+
+//Read in the command line
+    getline(cin, cmd);
+
+//Convert command into a c string then store into array
+    strncpy(line, cmd.c_str(), sizeof(line));
+    line[sizeof(line) - 1] = 0;
+    printf("\n");
+
+//Parse the string into sperate commands
+    parse(line, argv);
+
+//Test to see if input is exit
+    if (strcmp(argv[0], "exit") == 0)
+      exit(0);            /*   exit if it is                */
+    execute(argv);           /* otherwise, execute the command */
+    }
+
   return 0;
 }

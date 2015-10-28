@@ -8,23 +8,51 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-#include <sstream>
 
 using namespace std;
 
-void exec( char **ptrArr );
-void parse( char * arr, char ** ptArr );
-
-int main(int argc, char * argv[])
+void  parse(char *line, char **argv)
 {
+     while (*line != '\0') {       /* if not the end of line ....... */ 
+          while (*line == ' ' || *line == '\t' || *line == '\n')
+               *line++ = '\0';     /* replace white spaces with 0    */
+          *argv++ = line;          /* save the argument position     */
+          while (*line != '\0' && *line != ' ' && 
+                 *line != '\t' && *line != '\n') 
+               line++;             /* skip the argument until ...    */
+     }
+     *argv = '\0';                 /* mark the end of argument list  */
+}
 
-  char input_cmd[1024];
-  char * args[64];
-  char *name;
-  char hostname[1024];
-  int host;
-  bool exit = false;
-  string cmd;
+void  execute(char **argv)
+{
+     pid_t  pid;
+     int    status;
+
+     if ((pid = fork()) < 0) {     /* fork a child process           */
+          printf("*** ERROR: forking child process failed\n");
+          exit(1);
+     }
+     else if (pid == 0) {          /* for the child process:         */
+          if (execvp(*argv, argv) < 0) {     /* execute the command  */
+               printf("*** ERROR: exec failed\n");
+               exit(1);
+          }
+     }
+     else {                                  /* for the parent:      */
+          while (wait(&status) != pid)       /* wait for completion  */
+               ;
+     }
+}
+
+int  main()
+{
+  char  line[1024];             // the input line
+  char  *argv[64];              // the command line argument      
+  char *name;                   // char string to hold login name
+  char hostname[1024];          // char array to hold hostname
+  int host;                     // variable to deterimine if successful
+  string cmd;                   // string that holds command line
 
 //Get the users login name and checks for an error
   name = getlogin();
@@ -37,70 +65,58 @@ int main(int argc, char * argv[])
   if (host == -1)
     perror("gethostname() error");
 
-  while (!exit)
+//Loop through shell until exit is typed
+  while (1) 
   {
-    
-    //Prints the user and hostname and gets input and assigns it to cmd
+
+//Print out the command line
     cout << '[';
     printf(name, hostname);
     cout << ']';
     cout << "$ ";
-    getline(cin, cmd); 
-    strncpy(input_cmd, cmd.c_str(), sizeof(input_cmd)); 
-    input_cmd[sizeof(input_cmd) - 1] = 0;
+
+//Read in the command line
+    getline(cin, cmd);
+    
+//Convert command into a c string then store into array
+    strncpy(line, cmd.c_str(), sizeof(line));
+    line[sizeof(line) - 1] = 0;
     printf("\n");
-    parse( input_cmd, args);
     
-    //IF user types exit it will end the program
-    if (cmd == "exit")
-      exit = true;
-    
-    exec(args);
-  }
-  
-  return 0;
-}
-
-void parse( char *arr, char** ptArr )
-{
-  while ( *arr != '\0' )
-  {
-    while( *arr == ' ' || *arr == '\t' || *arr == '\n')
-      *arr++ = '\0';
-    *ptArr++ = arr;
-    while( *arr == ' ' && *arr == '\t' && *arr == '\n')
-      *arr++;   
-  }
-  *ptArr = '\0';
-}
-
-void exec( char** ptrArr )
-{
-  pid_t c_pid, pid;
-  int status;
-
-  c_pid = fork();
-  
-  if( c_pid < 0)
-  {
-    perror("fork failed");
-    exit(1);
-  }
-
-  else if (c_pid == 0)
-  {
-    printf("Child: executing ls\n");
-    execvp(*ptrArr, ptrArr);
-    perror("execve failed");
-  }
-
-  else if (c_pid > 0)
-  {
-    if( (pid = wait(&status)) < 0)
+    int arrLength = cmd.length();
+    int check = 0;
+    bool cmdDone = false;
+    while (!cmdDone)
     {
-      perror("wait");
-      exit(1);
+      char  *argv[64] = {0};              // the command line argument  
+      char tmp[1024] = {0};
+      int restart = 0;
+      while(line[check] != ';' && line[check] != '|' && 
+            line[check] != '&' && line[check] != '\0')
+      {
+         tmp[restart] = line[check];
+         check++;
+         restart++;   
+      }
+      check++;
+      tmp[sizeof(tmp) - 1] = 0;
+      parse(tmp, argv);
+      if (strcmp(argv[0], "exit") == 0)
+         exit(0);            /*   exit if it is                */
+      execute(argv);           /* otherwise, execute the command */
+      if(check >= arrLength)
+        cmdDone = true;
     }
-    printf("Parent: finished\n");
   }
+//Parse the string into sperate commands
+   // parse(line, argv);
+    
+        
+//Test to see if input is exit
+    if (strcmp(argv[0], "exit") == 0)
+      exit(0);            /*   exit if it is                */
+    execute(argv);           /* otherwise, execute the command */
+   
+
+  return 0;
 }
