@@ -4,11 +4,9 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <vector>
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-#include <sstream>
 
 using namespace std;
 
@@ -48,8 +46,10 @@ void  execute(char **argv)
 
 int  main()
 {
+
   char  line[1024];             // the input line
   char  *argv[64];              // the command line argument      
+  char *parse;
   char *name;                   // char string to hold login name
   char hostname[1024];          // char array to hold hostname
   int host;                     // variable to deterimine if successful
@@ -85,7 +85,12 @@ int  main()
     printf("\n");
 
 //Parse the string into sperate commands
-    parse(line, argv);
+    parse = strtok (line," ;|&");
+    while (parse != NULL)
+    {
+       printf ("%s\n", parse);
+       parse = strtok (NULL, " ;|&");
+    }
 
 //Test to see if input is exit
     if (strcmp(argv[0], "exit") == 0)
