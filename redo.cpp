@@ -10,18 +10,18 @@
 
 using namespace std;
 
-void  parse(char *line, char **argv)
+/*void  parse(char *line, char **argv)
 {
-     while (*line != '\0') {       /* if not the end of line ....... */ 
+     while (*line != '\0') {        if not the end of line ....... 
           while (*line == ' ' || *line == '\t' || *line == '\n')
-               *line++ = '\0';     /* replace white spaces with 0    */
-          *argv++ = line;          /* save the argument position     */
+               *line++ = '\0';     /* replace white spaces with 0    
+          *argv++ = line;          /* save the argument position     
           while (*line != '\0' && *line != ' ' && 
-                 *line != '\t' && *line != '\n') 
-               line++;             /* skip the argument until ...    */
+                *line != '\t' && *line != '\n') 
+               line++;             /* skip the argument until ...    
      }
-     *argv = '\0';                 /* mark the end of argument list  */
-}
+     *argv = '\0';                 /* mark the end of argument list  
+}*/
 
 void  execute(char **argv, bool &cmdWorked)
 {
@@ -34,9 +34,9 @@ void  execute(char **argv, bool &cmdWorked)
      }
      else if (pid == 0) {          /* for the child process:         */
           if (execvp(*argv, argv) < 0) {     /* execute the command  */
-               cmdWorked = false;   //If cmd failed, set variable to false
+               cmdWorked = false;    //If cmd failed, set variable to false
                printf("*** ERROR: exec failed\n");
-              // exit(1);
+               exit(1);
           }
           else
              cmdWorked = true;       //If cmd succeeded, set variable to true
@@ -49,6 +49,7 @@ void  execute(char **argv, bool &cmdWorked)
 
 int  main()
 {
+  char *cmds;
   char  line[1024];             // the input line
   char *name;                   // char string to hold login name
   char hostname[1024];          // char array to hold hostname
@@ -93,22 +94,21 @@ int  main()
     int check = 0;
     bool cmdDone = false;                 //Bool to determine when to stop
     bool commandchain = true;
-    string op;			  // Variable to keep track of operation
     //While loop that seperates commands and executes them
     while (!cmdDone)
     {
       char  *argv[64] = {0};              // the command line argument  
       char tmp[1024] = {0};               // Temp array to hold a command
       int restart = 0;                    // Restarts temp array from beginning
+      string op = "";			  // Variable to keep track of operation
       //A loop that moves a single command into the temp array
       while(line[check] != ';' && line[check] != '|' && 
-            line[check] != '&' && line[check] != '#' && line[check] != '\0')
+            line[check] != '&' && line[check] != '\0')
       {
          //Check to see if the last character in cmd is a space, if so
          //then break out of loop
          if(line[check] == ' ' && (line[check + 1] == '|' ||
-            line[check + 1] == '&' || line[check + 1] == '#' || 
-                 line[check + 1] == '\0') && restart != 0)
+            line[check + 1] == '&' || line[check + 1] == '\0') && restart != 0)
             break;
          tmp[restart] = line[check];      //Transfer command from line to tmp
          check++;
@@ -116,7 +116,6 @@ int  main()
       }
       
       //Three checks to see if there is a OR or AND operator 
-     
       if (line[check] == '|' && line[check + 1] == '|')
       {
          check+=2;
@@ -141,8 +140,7 @@ int  main()
       //Checks if the command should be run based on previous operator and cmd
       if (commandchain == true)
          execute(argv, cmdWorked);
-     if (line[check - 1] == '#')
-        break;   
+      
       //A variety of checks to see if the next command should be executed
       //based on the operator that is passed in
       if (op == "||" && cmdWorked == false)
