@@ -85,18 +85,24 @@ int  main()
     printf("\n");
 
 //Parse the string into sperate commands
-    parse = strtok (line," ;|&");
+    parse = strtok (line,";|&");
+    int i = 0;
     while (parse != NULL)
     {
        printf ("%s\n", parse);
-       parse = strtok (NULL, " ;|&");
+       parse = strtok (NULL, ";|&");
+       argv[i] = parse;
+       i++;
+       execute(argv);
     }
+    *argv = '\0';
+    char *s = parse;
 
 //Test to see if input is exit
-    if (strcmp(argv[0], "exit") == 0)
-      exit(0);            /*   exit if it is                */
-    execute(argv);           /* otherwise, execute the command */
-    }
+   // if (strcmp(argv[0], "exit") == 0)
+   //   exit(0);            /*   exit if it is                */
+   // execute(argv);           /* otherwise, execute the command */
+  }
 
   return 0;
 }

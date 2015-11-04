@@ -2,50 +2,16 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 using namespace std;
 
-void  parse(char *line, char **argv)
-{
-     while (*line != '\0') {       /* if not the end of line ....... */ 
-          while (*line == ' ' || *line == '\t' || *line == '\n')
-               *line++ = '\0';     /* replace white spaces with 0    */
-          *argv++ = line;          /* save the argument position     */
-          while (*line != '\0' && *line != ' ' && 
-                 *line != '\t' && *line != '\n') 
-               line++;             /* skip the argument until ...    */
-     }
-     *argv = '\0';                 /* mark the end of argument list  */
-}
-
-void  execute(char **argv, bool &cmdWorked)
-{
-     pid_t  pid;
-     int    status;
-
-     if ((pid = fork()) < 0) {     /* fork a child process           */
-          printf("*** ERROR: forking child process failed\n");
-          exit(1);
-     }
-     else if (pid == 0) {          /* for the child process:         */
-          if (execvp(*argv, argv) < 0) {     /* execute the command  */
-               cmdWorked = false;   //If cmd failed, set variable to false
-               printf("*** ERROR: exec failed\n");
-              // exit(1);
-          }
-          else
-             cmdWorked = true;       //If cmd succeeded, set variable to true
-     }
-     else {                                  /* for the parent:      */
-          while (wait(&status) != pid)       /* wait for completion  */
-               ;
-     }
-}
+void  execute(char **argv, bool &cmdWorked);
+void  parse(char *line, char **argv);
 
 int  main()
 {
@@ -94,6 +60,7 @@ int  main()
     bool cmdDone = false;                 //Bool to determine when to stop
     bool commandchain = true;
     string op;			  // Variable to keep track of operation
+
     //While loop that seperates commands and executes them
     while (!cmdDone)
     {
@@ -108,7 +75,7 @@ int  main()
          //then break out of loop
          if(line[check] == ' ' && (line[check + 1] == '|' ||
             line[check + 1] == '&' || line[check + 1] == '#' || 
-                 line[check + 1] == '\0') && restart != 0)
+            line[check + 1] == '\0') && restart != 0)
             break;
          tmp[restart] = line[check];      //Transfer command from line to tmp
          check++;
@@ -135,14 +102,16 @@ int  main()
 
       if (argv[0] == '\0')                //If array is empty then do nothing
       {}
-      else if (strcmp(argv[0], "exit") == 0)   //Sees if exit was entered
+      if(strcmp(argv[0], "exit") == 0)   //Sees if exit was entered
          exit(0);            /*   exit if it is                */
 
       //Checks if the command should be run based on previous operator and cmd
       if (commandchain == true)
          execute(argv, cmdWorked);
-     if (line[check - 1] == '#')
-        break;   
+
+      if (line[check - 1] == '#')
+         break;   
+
       //A variety of checks to see if the next command should be executed
       //based on the operator that is passed in
       if (op == "||" && cmdWorked == false)
@@ -163,4 +132,43 @@ int  main()
   }  
 
   return 0;
+}
+
+
+void  execute(char **argv, bool &cmdWorked)
+{
+     pid_t  pid;
+     int    status;
+
+     if ((pid = fork()) < 0) {     /* fork a child process           */
+          printf("*** ERROR: forking child process failed\n");
+          exit(1);
+     }
+     else if (pid == 0) {          /* for the child process:         */
+          if (execvp(argv[0], argv) < 0) /* Executes the command       */
+          {     
+               cmdWorked = false;   //If cmd failed, set variable to false
+               printf("*** ERROR: exec failed\n");
+               //exit(1);
+          }
+          else
+             cmdWorked = true;       //If cmd succeeded, set variable to true
+     }
+     else {                                  /* for the parent:      */
+          while (wait(&status) != pid)       /* wait for completion  */
+               ;
+     }
+}
+
+void  parse(char *line, char **argv)
+{
+     while (*line != '\0') {       /* if not the end of line ....... */ 
+          while (*line == ' ' || *line == '\t' || *line == '\n')
+               *line++ = '\0';     /* replace white spaces with 0    */
+          *argv++ = line;          /* save the argument position     */
+          while (*line != '\0' && *line != ' ' && 
+                 *line != '\t' && *line != '\n') 
+               line++;             /* skip the argument until ...    */
+     }
+     *argv = '\0';                 /* mark the end of argument list  */
 }
