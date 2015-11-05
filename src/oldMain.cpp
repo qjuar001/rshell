@@ -135,7 +135,7 @@ int  main()
 }
 
 
-void  execute(char **argv, bool &cmdWorked)
+void  execute(char **argv, bool & worked)
 {
      pid_t  pid;
      int    status;

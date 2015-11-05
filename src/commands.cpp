@@ -8,55 +8,56 @@ using namespace std;
 
 void commands::parse()
 {  
-   int size = cmd.length();
+   int size = cmd.length();		  //Gets the size fo the cmd entered
    int check = 0;
-   bool done = false;
-   stop = false;
+   bool done = false;			  //Bool to determine if execution is done
+   stop = false;			  //Bool to determine if exit was entered
 
    while (!done)
    {
-      char tmp[1024] = {0};
-      memset(argv, 0, sizeof(argv));
+      char tmp[1024] = {0};		  //Sets all values in tmp to NULL
+      memset(argv, 0, sizeof(argv));	  //Sets all values in argv to NULL
       int restart = 0;                    // Restarts temp array from beginning
+
       //A loop that moves a single command into the temp array
       while(line[check] != ';' && line[check] != '|' && 
             line[check] != '&' && line[check] != '#' && line[check] != '\0')
       {
-         //Check to see if the last character in cmd is a space, if so
-         //then break out of loop
-         //if(line[check] == ' ' && (line[check + 1] == '|' ||
-         //   line[check + 1] == '&' || line[check + 1] == '#' || 
-         //   line[check + 1] == '\0') && restart != 0)
-         //   break;
          tmp[restart] = line[check];      //Transfer command from line to tmp
-         check++;
+         check++;			  //Moves through orginal string
          restart++;                       //Move through tmp array
       }
-      check++;
 
-      tmp[sizeof(tmp) - 1] = 0; 
-      if (strcmp(tmp, "exit") == 0)
-      {
-         stop = true;
-         exit(0); 
-      }
+      tmp[sizeof(tmp) - 1] = 0; //Makes sure tmp array ends with a NULL
 
       int i = 0; //Keeps track of position in argv
       char *token = strtok(tmp, ";|& "); //Token that parses the string
    
-      //Takes every part of string and assigns to the array
+      //Seperated the string into segments that are then stored in argv
       while(token != NULL)
       {
-         argv[i] = strdup(token);
-         token = strtok(NULL, ";|& ");
-         i++;
+         //If the string is exit then stop the program
+         if (strcmp(token, "exit") == 0)
+         {
+            stop = true; 
+            exit(0);
+         }
+         argv[i] = strdup(token);	//Copies token into argv
+         token = strtok(NULL, ";|& ");  //Gets another token
+         i++;				//Move location of argv
       }
       argv[i] = NULL; //Makes last position a NULL character
       execute(argv); //executes the commands
-      if(worked == true)
-         cout << "Good" << endl;
-      else
-         cout << "bad" << endl;
+      
+      //A checck to see if a comment was entered, if so then ignore whats next
+      if(line[check] == '#' && (line[check - 1] == ' ' || line[check -1] == ';'
+         || line[check - 1] == '|' || line[check - 1] == '&'))
+         break; 
+      
+      //Moce check to the next command
+      check++;
+      
+      //If check is the size of the string then stop function and get another cmd
       if (check >= size)
          done = true;
    }

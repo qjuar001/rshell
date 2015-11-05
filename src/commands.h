@@ -11,59 +11,66 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 
 class commands: public cmdWorked
 { 
    protected:
-      char line[1024];
-      char *argv[64];
-      bool stop;
-      std::string cmd;
+      char line[1024];   //Array to hold c string of command line
+      char *argv[64];    //Holds each individual command after parse
+      bool stop;         //Bool to determine if program should terminate
+      std::string cmd;   //String that holds original command
   
    public:
+
+      //Constructor to create command object
       commands (std::string c)
       {
-         cmd = c;
+         cmd = c;   //Sets cmd to the string entered to console
+         
+         //Converts cmd to a c string then stores it into the line array
          strncpy(line, cmd.c_str(), sizeof(line));
          line[sizeof(line) - 1] = 0;
-         printf("\n");
       };
 
+      //Destructor for class commands
       ~commands()
      {};
  
+      //Function that executes a command
       void execute (char **argv)
       {
      
-         pid_t  pid;
-         int    status;
+         pid_t c_pid, pid;		//Values to hold fork and wait
+         int status;
 
-         if ((pid = fork()) < 0) 
-         {     /* fork a child process           */
+         if ((c_pid = fork()) < 0) 
+         {     // fork a child process 
             printf("*** ERROR: forking child process failed\n");
             exit(1);
          }
-         else if (pid == 0) 
-         {          /* for the child process:         */
-            if (execvp(argv[0], argv) < 0) /* Executes the command       */
+         else if (c_pid == 0) 
+         {          // for the child process:
+            if (execvp(argv[0], argv) < 0) // Executes the command
             {     
-               worked = false;   //If cmd failed, set variable to false
                printf("*** ERROR: exec failed\n");
-               //exit(1);
+               exit(1);
             }
-            else
-               worked = true;       //If cmd succeeded, set variable to true
          }
-         else 
-         {                                  /* for the parent:      */
-            while (wait(&status) != pid)       /* wait for completion  */
-            ;
+         else if (c_pid > 0) 
+         {                                  
+            if ( (pid = wait(&status)) < 0)  //Wait for child to finish
+            {
+               perror("wait");
+               exit(1);
+            } 
+            WEXITSTATUS(status);	     //return status of child
          }
       };
 
-      void parse ();
+      void parse ();    //Function to parse the command entered
 
-      bool getExit()
+      bool getExit()    //Function to see value of stop
       {
          return stop;
       };
