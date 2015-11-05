@@ -52,19 +52,25 @@ class commands: public cmdWorked
          else if (c_pid == 0) 
          {          // for the child process:
             if (execvp(argv[0], argv) < 0) // Executes the command
-            {     
+            {
+               worked = false;     
                printf("*** ERROR: exec failed\n");
-               exit(1);
+               _exit(1);
             }
          }
          else if (c_pid > 0) 
          {                                  
-            if ( (pid = wait(&status)) < 0)  //Wait for child to finish
+            if ( (pid = waitpid(c_pid, &status,0)) < 0) //Wait for child to finish
             {
+               worked = false;
                perror("wait");
-               exit(1);
+               _exit(1);
             } 
-            WEXITSTATUS(status);	     //return status of child
+            
+            if(status > 0) //If status is returned bigger than 0, command failed
+               worked = false;
+            else if(status == 0) //If status returned 0, everything worked fine
+               worked = true;
          }
       };
 

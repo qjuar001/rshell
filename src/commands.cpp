@@ -48,7 +48,10 @@ void commands::parse()
       }
       argv[i] = NULL; //Makes last position a NULL character
       execute(argv); //executes the commands
-      
+      if(worked == true)
+         cout << "true" << endl;
+      else
+         cout << "false" << endl; 
       //A checck to see if a comment was entered, if so then ignore whats next
       if(line[check] == '#' && (line[check - 1] == ' ' || line[check -1] == ';'
          || line[check - 1] == '|' || line[check - 1] == '&'))
