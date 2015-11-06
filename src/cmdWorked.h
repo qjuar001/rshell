@@ -3,7 +3,7 @@
 
 //Abstract Base Class
 class cmdWorked
-{
+{ 
    protected:
       bool worked; //Bool to determine if the command ran properly
    
