@@ -1,0 +1,85 @@
+Script started on Fri 06 Nov 2015 11:49:09 AM PST
+]0;qjuar001@hammer:~/rshell/src/bin[?1034h[qjuar001@hammer bin]$ ./a.out
+
+rshell Copyright (C) 2015 Queston Juarez & Mark Spencer
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.
+
+[qjuar001@hammer.cs.ucr.edu]$ ls; echo multiple commands! Yay!
+a.out  multi_command.script  testFile  testFile2
+multiple commands! Yay!
+[qjuar001@hammer.cs.ucr.edu]$ ls testFile testFile2; git ban  ranch; echo I thirs d command
+testFile:
+test.cpp
+
+testFile2:
+test2.cpp
+* exec
+  master
+  À=
+third command
+[qjuar001@hammer.cs.ucr.edu]$ rm testFile        -rf testFile2 || rm -rf testFile; ls
+a.out  multi_command.script  testFile
+[qjuar001@hammer.cs.ucr.edu]$ ls
+a.out  multi_command.script  testFile
+[qjuar001@hammer.cs.ucr.edu]$ vi testFile    3.cpp; ls && echo make another file && mkdir testFile3 || mkdir testFile4 && this    echo this shouldn't prit nt
+[?1049h[?1h=[1;43r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[43;1H"test3.cpp" [New File][2;1H[1m[34m~                                                                                  [3;1H~                                                                                  [4;1H~                                                                                  [5;1H~                                                                                  [6;1H~                                                                                  [7;1H~                                                                                  [8;1H~                                                                                  [9;1H~                                                                                  [10;1H~                                                                                  [11;1H~                                                                                  [12;1H~                                                                                  [13;1H~                                                                                  [14;1H~                                                                                  [15;1H~                                                                                  [16;1H~                                                                                  [17;1H~                                                                                  [18;1H~                                                                                  [19;1H~                                                                                  [20;1H~                                                                                  [21;1H~                                                                                  [22;1H~                                                                                  [23;1H~                                                                                  [24;1H~                                                                                  [25;1H~                                                                                  [26;1H~                                                                                  [27;1H~                                                                                  [28;1H~                                                                                  [29;1H~                                                                                  [30;1H~                                                                                  [31;1H~                                                                                  [32;1H~                                                                                  [33;1H~                                                                                  [34;1H~                                                                                  [35;1H~                                                                                  [36;1H~                                                                                  [37;1H~                                                                                  [38;1H~                                                                                  [39;1H~                                                                                  [40;1H~                                                                                  [41;1H~                                                                                  [42;1H~                                                                                  [1;1H[?12l[?25h[?25l[m[43;1H[1m-- INSERT --[m[43;13H[K[1;1H[?12l[?25h[?25ls[?12l[?25h[?25l [?12l[?25h[?25lt[?12l[?25h[?25l[1;3H[K[1;3H[?12l[?25h[?25l[?12l[?25h[?25l[1;1H[K[1;1H[?12l[?25h[?25lt[?12l[?25h[?25l[1;1H[K[1;1H[?12l[?25h[?25lT[?12l[?25h[?25lh[?12l[?25h[?25li[?12l[?25h[?25ls[?12l[?25h[?25l [?12l[?25h[?25li[?12l[?25h[?25ls[?12l[?25h[?25l [?12l[?25h[?25lt[?12l[?25h[?25lh[?12l[?25h[?25le[?12l[?25h[?25l [?12l[?25h[?25l[?12l[?25h[?25l[1;11H[K[1;11H[?12l[?25h[?25l[1;10H[K[1;10H[?12l[?25h[?25l[1;9H[K[1;9H[?12l[?25h[?25l,[?12l[?25h[?25ly[?12l[?25h[?25l[1;10H[K[1;10H[?12l[?25h[?25l[1;9H[K[1;9H[?12l[?25h[?25lm[?12l[?25h[?25ly[?12l[?25h[?25l [?12l[?25h[?25lt[?12l[?25h[?25lh[?12l[?25h[?25li[?12l[?25h[?25lr[?12l[?25h[?25ld[?12l[?25h[?25l [?12l[?25h[?25lt[?12l[?25h[?25le[?12l[?25h[?25ls[?12l[?25h[?25lt[?12l[?25h[?25l.[?12l[?25h[?25lc[?12l[?25h[?25lp[?12l[?25h[?25lp[?12l[?25h[?25l [?12l[?25h[?25lf[?12l[?25h[?25li[?12l[?25h[?25ll[?12l[?25h[?25le[?12l[?25h[?25l![?12l[?25h[?25l:[?12l[?25h[?25l[1;32H[K[1;32H[?12l[?25h[43;1H[K[1;31H[?25l[?12l[?25h[?25l[43;1H:[?12l[?25hwq[?25l"test3.cpp" [New] 1L, 32C written
+[?1l>[?12l[?25h[?1049la.out  multi_command.script  test3.cpp	testFile
+make another file
+[qjuar001@hammer.cs.ucr.edu]$ ls -a; cat tse  estFile    3.cpp && echo    cp test3.cpp test4.cpp || mv test3.cpp test4.cpp; ls
+.  ..  a.out  multi_command.script  test3.cpp  testFile  testFile3
+This is my third test.cpp file!
+a.out  multi_command.script  test3.cpp	test4.cpp  testFile  testFile3
+[qjuar001@hammer.cs.ucr.edu]$   mv test             test3.cpp        testFile3 && ls; rm testFile3         -rf testFile3 && mv test4.cpp test                 rm testFile 3  3 || echo The last command failed so not w this one is running || ls || ls -a && echo that was a long chain of commands
+a.out  multi_command.script  test4.cpp	testFile  testFile3
+rm: cannot remove `testFile3': No such file or directory
+The last command failed so now this one is running
+.  ..  a.out  multi_command.script  test4.cpp  testFile
+that was a long chain of commands
+[qjuar001@hammer.cs.ucr.edu]$ ls|| echo hello
+a.out  multi_command.script  test4.cpp	testFile
+[qjuar001@hammer.cs.ucr.edu]$ ls ||echo hello
+a.out  multi_command.script  test4.cpp	testFile
+[qjuar001@hammer.cs.ucr.edu]$ ls||echo hello
+a.out  multi_command.script  test4.cpp	testFile
+[qjuar001@hammer.cs.ucr.edu]$ ls&&echo hello
+a.out  multi_command.script  test4.cpp	testFile
+hello
+[qjuar001@hammer.cs.ucr.edu]$ ls  && echo hello
+a.out  multi_command.script  test4.cpp	testFile
+hello
+[qjuar001@hammer.cs.ucr.edu]$ ls &&echo hello
+a.out  multi_command.script  test4.cpp	testFile
+hello
+[qjuar001@hammer.cs.ucr.edu]$ ls ; || echo hello
+a.out  multi_command.script  test4.cpp	testFile
+hello
+[qjuar001@hammer.cs.ucr.edu]$ ls ; && echo hello
+a.out  multi_command.script  test4.cpp	testFile
+[qjuar001@hammer.cs.ucr.edu]$ ls ||
+a.out  multi_command.script  test4.cpp	testFile
+[qjuar001@hammer.cs.ucr.edu]$ ls &&
+a.out  multi_command.script  test4.cpp	testFile
+[qjuar001@hammer.cs.ucr.edu]$ rm || -rf test4.  File
+rm: missing operand
+Try `rm --help' for more information.
+*** ERROR: exec failed
+[qjuar001@hammer.cs.ucr.edu]$ rm testFile || ls  ls && rm -rf testFILE   eile    ile;    || ls; ls-  -a
+rm: cannot remove `testFile': Is a directory
+a.out  multi_command.script  test4.cpp	testFile
+.  ..  a.out  multi_command.script  test4.cpp
+[qjuar001@hammer.cs.ucr.edu]$ cat   cat test4.cpp && fg || cp test4.cpp test5.cpp && ls -a
+This is my third test.cpp file!
+*** ERROR: exec failed
+.  ..  a.out  multi_command.script  test4.cpp  test5.cpp
+[qjuar001@hammer.cs.ucr.edu]$ rm test4.cpp test5.cpp & ls
+a.out  multi_command.script
+[qjuar001@hammer.cs.ucr.edu]$ ls | eh cho oh no
+a.out  multi_command.script
+oh no
+[qjuar001@hammer.cs.ucr.edu]$ exit
+]0;qjuar001@hammer:~/rshell/src/bin[qjuar001@hammer bin]$ exit
+exit
+
+Script done on Fri 06 Nov 2015 12:10:03 PM PST

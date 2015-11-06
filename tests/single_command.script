@@ -1,0 +1,141 @@
+Script started on Fri 06 Nov 2015 11:38:26 AM PST
+]0;qjuar001@hammer:~/rshell/src/bin[?1034h[qjuar001@hammer bin]$ ./a.out
+
+rshell Copyright (C) 2015 Queston Juarez & Mark Spencer
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.
+
+[qjuar001@hammer.cs.ucr.edu]$ ls
+a.out  single_command.script  test.cpp
+[qjuar001@hammer.cs.ucr.edu]$                          ls
+a.out  single_command.script  test.cpp
+[qjuar001@hammer.cs.ucr.edu]$ ls                                    
+a.out  single_command.script  test.cpp
+[qjuar001@hammer.cs.ucr.edu]$ ls -a
+.  ..  a.out  single_command.script  test.cpp
+[qjuar001@hammer.cs.ucr.edu]$                ls                        -a
+.  ..  a.out  single_command.script  test.cpp
+[qjuar001@hammer.cs.ucr.edu]$ mkdir test  File testFile2
+[qjuar001@hammer.cs.ucr.edu]$ ls -alrt
+total 40
+-rwxr-xr-x 1 qjuar001 csmajs 18705 Nov  6 11:19 a.out
+drwxr-xr-x 3 qjuar001 csmajs  4096 Nov  6 11:19 ..
+-rw-r--r-- 1 qjuar001 csmajs   168 Nov  6 11:36 test.cpp
+-rw-r--r-- 1 qjuar001 csmajs     0 Nov  6 11:38 single_command.script
+drwxr-xr-x 2 qjuar001 csmajs  4096 Nov  6 11:39 testFile2
+drwxr-xr-x 2 qjuar001 csmajs  4096 Nov  6 11:39 testFile
+drwxr-xr-x 4 qjuar001 csmajs  4096 Nov  6 11:39 .
+[qjuar001@hammer.cs.ucr.edu]$ cat test.cpp
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+   int num;
+
+   cout << "This file doesn't have any significance, it's just for testing\n";
+
+   return 0;
+}
+   
+[qjuar001@hammer.cs.ucr.edu]$ vp  cp test.cpp           vi test2.cpp
+[?1049h[?1h=[1;43r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[43;1H"test2.cpp" [New File][2;1H[1m[34m~                                                                                 [3;1H~                                                                                 [4;1H~                                                                                 [5;1H~                                                                                 [6;1H~                                                                                 [7;1H~                                                                                 [8;1H~                                                                                 [9;1H~                                                                                 [10;1H~                                                                                 [11;1H~                                                                                 [12;1H~                                                                                 [13;1H~                                                                                 [14;1H~                                                                                 [15;1H~                                                                                 [16;1H~                                                                                 [17;1H~                                                                                 [18;1H~                                                                                 [19;1H~                                                                                 [20;1H~                                                                                 [21;1H~                                                                                 [22;1H~                                                                                 [23;1H~                                                                                 [24;1H~                                                                                 [25;1H~                                                                                 [26;1H~                                                                                 [27;1H~                                                                                 [28;1H~                                                                                 [29;1H~                                                                                 [30;1H~                                                                                 [31;1H~                                                                                 [32;1H~                                                                                 [33;1H~                                                                                 [34;1H~                                                                                 [35;1H~                                                                                 [36;1H~                                                                                 [37;1H~                                                                                 [38;1H~                                                                                 [39;1H~                                                                                 [40;1H~                                                                                 [41;1H~                                                                                 [42;1H~                                                                                 [1;1H[?12l[?25h[?25l[m[43;1H[K[43;1H:[?12l[?25hwq[?25l"test2.cpp" [New] 0L, 0C written
+[?1l>[?12l[?25h[?1049l[qjuar001@hammer.cs.ucr.edu]$ ls
+a.out  single_command.script  test2.cpp  test.cpp  testFile  testFile2
+[qjuar001@hammer.cs.ucr.edu]$ cp test.cpp test2.cpp
+[qjuar001@hammer.cs.ucr.edu]$ ls
+a.out  single_command.script  test2.cpp  test.cpp  testFile  testFile2
+[qjuar001@hammer.cs.ucr.edu]$ cat test2.cpp
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+   int num;
+
+   cout << "This file doesn't have any significance, it's just for testing\n";
+
+   return 0;
+}
+   
+[qjuar001@hammer.cs.ucr.edu]$ mv test.cpp testFile^[[D^[[D        
+[qjuar001@hammer.cs.ucr.edu]$ ls
+a.out  single_command.script  test2.cpp  testFile  testFile2
+[qjuar001@hammer.cs.ucr.edu]$ mv test2.cpp testFile2
+[qjuar001@hammer.cs.ucr.edu]$ ls
+a.out  single_command.script  testFile	testFile2
+[qjuar001@hammer.cs.ucr.edu]$ cd testFile
+*** ERROR: exec failed
+[qjuar001@hammer.cs.ucr.edu]$ ls -
+ls: cannot access -: No such file or directory
+[qjuar001@hammer.cs.ucr.edu]$ echo hello there everybody! THis     his test if   s going well!
+hello there everybody! This test is going well!
+[qjuar001@hammer.cs.ucr.edu]$ ls      -              a
+ls: cannot access -: No such file or directory
+ls: cannot access a: No such file or directory
+[qjuar001@hammer.cs.ucr.edu]$ ls testFile
+test.cpp
+[qjuar001@hammer.cs.ucr.edu]$ ls -a testFile2
+.  ..  test2.cpp
+[qjuar001@hammer.cs.ucr.edu]$ ls testFile             testFile2
+testFile:
+test.cpp
+
+testFile2:
+test2.cpp
+[qjuar001@hammer.cs.ucr.edu]$ git branch
+* exec
+  master
+  À=
+[qjuar001@hammer.cs.ucr.edu]$ git status
+# On branch exec
+# Changed but not updated:
+#   (use "git add/rm <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   ../Makefile
+#	deleted:    ../README.md
+#	deleted:    ../a.out
+#	modified:   ../cmdWorked.h
+#	modified:   ../commands.cpp
+#	modified:   ../commands.h
+#	modified:   ../connecters.h
+#	modified:   ../main.cpp
+#	deleted:    ../oldMain.cpp
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	../../Makefile
+#	../../README.md
+#	../.Makefile.swp
+#	./
+no changes added to commit (use "git add" and/or "git commit -a")
+[qjuar001@hammer.cs.ucr.edu]$ git ra  branch test
+[qjuar001@hammer.cs.ucr.edu]$ git branch
+* exec
+  master
+  test
+  À=
+[qjuar001@hammer.cs.ucr.edu]$ git -d branch test
+Unknown option: -d
+usage: git [--version] [--exec-path[=GIT_EXEC_PATH]] [--html-path]
+           [-p|--paginate|--no-pager] [--no-replace-objects]
+           [--bare] [--git-dir=GIT_DIR] [--work-tree=GIT_WORK_TREE]
+           [--help] COMMAND [ARGS]
+[qjuar001@hammer.cs.ucr.edu]$ git ba ranch -d test
+Deleted branch test (was b3239d7).
+[qjuar001@hammer.cs.ucr.edu]$ git branh ch
+* exec
+  master
+  À=
+[qjuar001@hammer.cs.ucr.edu]$ pwd
+/home/csmajs/qjuar001/rshell/src/bin
+[qjuar001@hammer.cs.ucr.edu]$ exit
+]0;qjuar001@hammer:~/rshell/src/bin[qjuar001@hammer bin]$ exit
+exit
+
+Script done on Fri 06 Nov 2015 11:46:29 AM PST
