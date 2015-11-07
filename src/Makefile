@@ -1,11 +1,8 @@
 #makefile that compiles command shell
 
-all: main.cpp commands.o 
-	g++ -W -Wall -Werror -ansi -pedantic main.cpp commands.o
-	mkdir bin; mv a.out bin
-rshell: main.cpp commands.o
-	g++ -W -Wall -Werror -ansi -pedantic main.cpp commands.o
-	mkdir bin; mv a.out bin
-cmds: commands.cpp
-	g++ -c -W -Wall -Werror -ansi -pedantic commands.cpp
-
+all: main.cpp commands.cpp 
+	g++ -Wall -Werror -ansi -pedantic -o rshell main.cpp commands.cpp
+	mv rshell ../bin
+rshell: main.cpp commands.cpp
+	g++ -Wall -Werror -ansi -pedantic -o rshell main.cpp commands.cpp
+	mv rshell ../bin
