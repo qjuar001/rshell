@@ -89,7 +89,7 @@ class commands: public cmdWorked
          }
       };
 
-      void parse ();    //Function to parse the command entered
+      bool parse ();    //Function to parse the command entered
 
       bool getExit()    //Function to see value of stop
       {

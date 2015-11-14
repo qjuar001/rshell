@@ -24,11 +24,12 @@
 
 using namespace std;
 
-void commands::parse()
+bool commands::parse()
 {  
    int size = cmd.length();		  //Gets the size fo the cmd entered
    int check = 0;                         //Holds position of cmd in line
    int conCnt = 0;                        //Holds number of commands passed
+   bool precedence = false;
    bool done = false;			  //Bool to determine if execution is done
    stop = false;			  //Bool to determine if exit was entered
    bool run[1024];                        //Array to determine if next cmd runs
@@ -47,9 +48,35 @@ void commands::parse()
       while(line[check] != ';' && line[check] != '|' && 
             line[check] != '&' && line[check] != '#' && line[check] != '\0')
       {
-         tmp[restart] = line[check];      //Transfer command from line to tmp
-         check++;			  //Moves through orginal string
-         restart++;                       //Move through tmp array
+         //If there is a precedence operator then seperate it and execute
+         //seperately in another command.
+         if(line[check] == '(' && cmd.length() >= 2)
+         {
+            string tmp;
+            int strSegment = 0;
+            check++;
+            int strSegBegin = check;
+            while(line[check] != ')')
+            {
+               check++;
+               strSegment++;
+            }
+            if (run[conCnt] == true)
+            {
+               tmp.assign(cmd, strSegBegin, strSegment); //Creates a new string cm
+               commands tmpCmd(tmp); //Creates a new command object
+               worked = tmpCmd.parse();
+            }
+            else
+               worked = false;
+            check++;
+         }
+         else
+         {
+            tmp[restart] = line[check];      //Transfer command from line to tmp
+            check++;			  //Moves through orginal string
+            restart++;                       //Move through tmp array
+         }
       }
        
       tmp[sizeof(tmp) - 1] = 0; //Makes sure tmp array ends with a NULL
@@ -80,7 +107,6 @@ void commands::parse()
       }
       else //IF flase, then dont run the command
       {
-         this->worked = false;
          conCnt++;
       }
        
@@ -110,11 +136,20 @@ void commands::parse()
          check++;  
          run[conCnt] = true;
       } 
-      
+            
       //If check is the size of the string then stop function and get another cmd
       if (check >= size)
          done = true;
    }
+   for( int i = 1; i < conCnt; i++)
+   {
+      if(run[i] == true)
+      {
+         precedence = true;
+         break;
+      }
+   }
+   return precedence;
 }
 
 

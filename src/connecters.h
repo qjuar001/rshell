@@ -52,9 +52,9 @@ class OR: connecters
       bool compare (bool cmdRan)
       {
          if (cmdRan == this->worked)
-            runNext = true;
+           this->runNext = true;
          else
-            runNext = false;
+           this->runNext = false;
          return runNext;
       };
 };
