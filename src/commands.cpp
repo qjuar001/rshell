@@ -29,7 +29,9 @@ bool commands::parse()
    int size = cmd.length();		  //Gets the size fo the cmd entered
    int check = 0;                         //Holds position of cmd in line
    int conCnt = 0;                        //Holds number of commands passed
-   bool precedence = false;
+   int preCnt = 0;
+   bool precedence[1024];
+   bool preWorked = false;
    bool done = false;			  //Bool to determine if execution is done
    stop = false;			  //Bool to determine if exit was entered
    bool run[1024];                        //Array to determine if next cmd runs
@@ -43,6 +45,7 @@ bool commands::parse()
       char tmp[1024] = {0};		  //Sets all values in tmp to NULL
       memset(argv, 0, sizeof(argv));	  //Sets all values in argv to NULL
       int restart = 0;                    // Restarts temp array from beginning
+      bool preExists = false;
 
       //A loop that moves a single command into the temp array
       while(line[check] != ';' && line[check] != '|' && 
@@ -53,23 +56,36 @@ bool commands::parse()
          if(line[check] == '(' && cmd.length() >= 2)
          {
             string tmp;
+            int numStartParen = 1;
+            int numEndParen = 0;
             int strSegment = 0;
             check++;
             int strSegBegin = check;
-            while(line[check] != ')')
+           
+            //Keeps track of paired parenthasis and grabs a segment of string
+            while(line[check] != ')' || numStartParen != numEndParen)
             {
-               check++;
-               strSegment++;
+               if(line[check] == '(')
+                  numStartParen++;
+               if(line[check] == ')')
+                  numEndParen++;
+               if(line[check] == ')' && numStartParen == numEndParen)
+               {}
+               else
+               {
+                  check++;
+                  strSegment++;
+               }
             }
             if (run[conCnt] == true)
             {
                tmp.assign(cmd, strSegBegin, strSegment); //Creates a new string cm
                commands tmpCmd(tmp); //Creates a new command object
                worked = tmpCmd.parse();
+               preExists = true;
             }
             else
-               worked = false;
-            check++;
+               check++;
          }
          else
          {
@@ -78,38 +94,43 @@ bool commands::parse()
             restart++;                       //Move through tmp array
          }
       }
-       
-      tmp[sizeof(tmp) - 1] = 0; //Makes sure tmp array ends with a NULL
-
-      int i = 0; //Keeps track of position in argv
-      char *token = strtok(tmp, ";|&# "); //Token that parses the string
-   
-      //Seperated the string into segments that are then stored in argv
-      while(token != NULL)
-      {
-         //If the string is exit then stop the program
-         if (strcmp(token, "exit") == 0)
-         {
-            stop = true; 
-            exit(0);
-         }
-         argv[i] = strdup(token);	//Copies token into argv
-         token = strtok(NULL, ";|&# ");  //Gets another token
-         i++;				//Move location of argv
-      }
-      argv[i] = NULL; //Makes last position a NULL character
       
-      //IF the position in run is true then execute the current cmd     
-      if (run[conCnt] == true)
-      {
-         execute(argv); //executes the commands
-         conCnt++;
+      if(preExists)
+      {}
+      else
+      { 
+         tmp[sizeof(tmp) - 1] = 0; //Makes sure tmp array ends with a NULL
+
+         int i = 0; //Keeps track of position in argv
+         char *token = strtok(tmp, ";|&# "); //Token that parses the string
+   
+         //Seperated the string into segments that are then stored in argv
+         while(token != NULL)
+         {
+            //If the string is exit then stop the program
+            if (strcmp(token, "exit") == 0)
+            {
+               stop = true; 
+               exit(0);
+            }
+            argv[i] = strdup(token);	//Copies token into argv
+            token = strtok(NULL, ";|&# ");  //Gets another token
+            i++;				//Move location of argv
+         }
+         argv[i] = NULL; //Makes last position a NULL character
+      
+         //IF the position in run is true then execute the current cmd     
+         if (run[conCnt] == true)
+         {
+            execute(argv); //executes the commands
+            precedence[preCnt] = worked;
+            conCnt++;
+         }
+         else //IF flase, then dont run the command
+         {
+            conCnt++;
+         }
       }
-      else //IF flase, then dont run the command
-      {
-         conCnt++;
-      }
-       
       //A checck to see if a comment was entered, if so then ignore whats next
       if(line[check] == '#' && (line[check - 1] == ' ' || line[check -1] == ';'
          || line[check - 1] == '|' || line[check - 1] == '&'))
@@ -136,20 +157,22 @@ bool commands::parse()
          check++;  
          run[conCnt] = true;
       } 
-            
+
+      preCnt++;  
+    
       //If check is the size of the string then stop function and get another cmd
       if (check >= size)
          done = true;
    }
-   for( int i = 1; i < conCnt; i++)
+   for( int i = 0; i < preCnt; i++)
    {
-      if(run[i] == true)
+      if(precedence[i] == true)
       {
-         precedence = true;
+         preWorked = true;
          break;
       }
    }
-   return precedence;
+   return preWorked;
 }
 
 
