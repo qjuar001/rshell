@@ -20,6 +20,7 @@
 #include <iostream>
 #include <algorithm>
 #include "connecters.h"
+#include "testCmd.h"
 #include <vector>
 
 using namespace std;
@@ -55,34 +56,40 @@ bool commands::parse()
          //seperately in another command.
          if(line[check] == '(' && cmd.length() >= 2)
          {
-            string tmp;
-            int numStartParen = 1;
-            int numEndParen = 0;
-            int strSegment = 0;
-            check++;
-            int strSegBegin = check;
+            string tmp; //Holds the new command to be executed in precedence
+            int numStartParen = 1; //Holds num of ( found
+            int numEndParen = 0; //Holds num of ) found
+            int strSegment = 0; //Holds the size of the string
+
+            check++; //Move the check of the ( character
+
+            int strSegBegin = check; //Holds the beginning of the string
            
             //Keeps track of paired parenthasis and grabs a segment of string
             while(line[check] != ')' || numStartParen != numEndParen)
             {
-               if(line[check] == '(')
-                  numStartParen++;
-               if(line[check] == ')')
-                  numEndParen++;
-               if(line[check] == ')' && numStartParen == numEndParen)
-               {}
+               if (line[check] == '(')
+                  numStartParen++; //Keeps track of starting parenthesis
+               else if (line[check] == ')')
+                  numEndParen++;  //Keeps track of ending parenthesis
+
+               if (line[check] == ')' && numStartParen == numEndParen)
+               {} //If the last ) is found then don't increment array or string
                else
                {
                   check++;
                   strSegment++;
                }
             }
+ 
+            //If run is true then create a new string command and then create a new command object
+            //with that string and parse it. worked recieves value returned by parse.
             if (run[conCnt] == true)
             {
-               tmp.assign(cmd, strSegBegin, strSegment); //Creates a new string cm
+               tmp.assign(cmd, strSegBegin, strSegment); //Creates a new string cmd
                commands tmpCmd(tmp); //Creates a new command object
                worked = tmpCmd.parse();
-               preExists = true;
+               preExists = true; //Determines if the commands have been executed already
             }
             else
                check++;
@@ -95,12 +102,20 @@ bool commands::parse()
          }
       }
       
-      if(preExists)
+      if(preExists) //If commands have been executed in precedence then skip the process below
       {}
       else
       { 
          tmp[sizeof(tmp) - 1] = 0; //Makes sure tmp array ends with a NULL
-
+         char def[10] = "-e";      //Hold the default flag -e
+         bool flag = false;        //Determines if a flag exists
+         bool bracket = false;     //Determines if there is a bracket
+         //int posBrack = 0;         //Holds the position of the bracket
+         //int j = 0;
+         string brackStr(tmp);     //Makes a copy of tmp array and makes it a string
+         testCmd checkDef;
+         checkDef.checkFlag(tmp, brackStr,flag,bracket); 
+         
          int i = 0; //Keeps track of position in argv
          char *token = strtok(tmp, ";|&# "); //Token that parses the string
    
@@ -113,25 +128,44 @@ bool commands::parse()
                stop = true; 
                exit(0);
             }
-            argv[i] = strdup(token);	//Copies token into argv
-            token = strtok(NULL, ";|&# ");  //Gets another token
-            i++;				//Move location of argv
+            
+            //If there wasn't a flag declared and there is a bracket or test detected then act
+            //accordingly
+            if (!flag && (strcmp(token, "test") == 0 || bracket))
+            {
+               //Point argv to the token specified
+               argv[i] = strdup(token);
+               i++;
+               //If there is a bracket..
+               if(!bracket)
+               {
+                  argv[i] = def; //then point argv to the default -e flag
+                  i++;  //then increment the argv value
+               }
+               token = strtok(NULL, ";|&# "); //Go back to get another token
+            }
+            else
+            {
+               argv[i] = strdup(token);	//Copies token into argv
+               token = strtok(NULL, ";|&# ");  //Gets another token
+               i++;				//Move location of argv
+            }
          }
          argv[i] = NULL; //Makes last position a NULL character
       
-         //IF the position in run is true then execute the current cmd     
+         //If the position in run is true then execute the current cmd     
          if (run[conCnt] == true)
          {
             execute(argv); //executes the commands
             precedence[preCnt] = worked;
             conCnt++;
          }
-         else //IF flase, then dont run the command
+         else //If false, then dont run the command
          {
             conCnt++;
          }
       }
-      //A checck to see if a comment was entered, if so then ignore whats next
+      //A check to see if a comment was entered, if so then ignore whats next
       if(line[check] == '#' && (line[check - 1] == ' ' || line[check -1] == ';'
          || line[check - 1] == '|' || line[check - 1] == '&'))
          break;
@@ -164,6 +198,8 @@ bool commands::parse()
       if (check >= size)
          done = true;
    }
+
+   //A for loop that checks if at least one command succeeded, if so then set preWorked to true
    for( int i = 0; i < preCnt; i++)
    {
       if(precedence[i] == true)
@@ -172,7 +208,7 @@ bool commands::parse()
          break;
       }
    }
-   return preWorked;
+   return preWorked; //Return a bool for precedence check
 }
 
 
