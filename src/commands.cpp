@@ -110,15 +110,21 @@ bool commands::parse()
          char def[10] = "-e";      //Hold the default flag -e
          bool flag = false;        //Determines if a flag exists
          bool bracket = false;     //Determines if there is a bracket
-         //int posBrack = 0;         //Holds the position of the bracket
+         bool runTestExe = false;
+         //int posBrack = 0;       //Holds the position of the bracket
          //int j = 0;
-         string brackStr(tmp);     //Makes a copy of tmp array and makes it a string
+         string brackStr(tmp);   //Makes a copy of tmp array and makes it a string
          testCmd checkDef;
-         checkDef.checkFlag(tmp, brackStr,flag,bracket); 
-         
+         checkDef.checkFlag(tmp, brackStr, flag, bracket); 
          int i = 0; //Keeps track of position in argv
-         char *token = strtok(tmp, ";|&# "); //Token that parses the string
-   
+         
+         char *token; //Token that parses the string
+
+         if (bracket)
+            token = strtok(tmp, ";|&#[] ");
+         else
+            token = strtok(tmp, ";|&# ");  
+
          //Seperated the string into segments that are then stored in argv
          while(token != NULL)
          {
@@ -128,21 +134,23 @@ bool commands::parse()
                stop = true; 
                exit(0);
             }
-            
             //If there wasn't a flag declared and there is a bracket or test detected then act
             //accordingly
-            if (!flag && (strcmp(token, "test") == 0 || bracket))
+            if (strcmp(token, "test") == 0 || bracket)
             {
-               //Point argv to the token specified
-               argv[i] = strdup(token);
-               i++;
                //If there is a bracket..
-               if(!bracket)
+               if(!bracket && !flag)
                {
                   argv[i] = def; //then point argv to the default -e flag
                   i++;  //then increment the argv value
                }
-               token = strtok(NULL, ";|&# "); //Go back to get another token
+               else if (strcmp(token, "test") != 0)
+               {
+                  argv[i] = strdup(token);
+                  i++;
+               }
+               token = strtok(NULL, ";|&#[] "); //Go back to get another token
+               runTestExe = true;
             }
             else
             {
@@ -156,7 +164,13 @@ bool commands::parse()
          //If the position in run is true then execute the current cmd     
          if (run[conCnt] == true)
          {
-            execute(argv); //executes the commands
+            if(runTestExe)
+            {
+              checkDef.execute(argv);
+              worked = checkDef.getWorked(); //FIX ME
+            }
+            else
+               execute(argv); //executes the commands
             precedence[preCnt] = worked;
             conCnt++;
          }

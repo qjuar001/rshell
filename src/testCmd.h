@@ -45,30 +45,55 @@ class testCmd : public cmdWorked
             tmp[length] = '\0'; //end array with a null char
          }
       }
+ 
+      bool getWorked()
+      {
+         return worked;
+      }
 
       void execute(char** argv)
       {
          struct stat sb;
-         
+
          if (argv[0] == '\0')
          {
             worked = false;
             fprintf(stderr, "Usage: %s <pathname>\n", argv[0]);
-            exit(1);
          }
-         
          if (stat(argv[1], &sb) == -1)
          {
             worked = false;
             perror("stat");
-            exit(1);
          }
-
-         switch (sb.st_mode & S_IFMT)
+         else
          {
-            case S_IFDIR: worked = true;   break;
-            case S_IFREG: worked = true;   break;
-            default: worked = false;       break;
+            if(strcmp(argv[0], "-f") == 0)
+            {
+               if(S_ISREG(sb.st_mode))
+                  worked = true;
+               else
+                  worked = false;
+            }
+            else if(strcmp(argv[0], "-d"))
+            {
+               if(S_ISDIR(sb.st_mode))
+                  worked = true;
+               else
+                  worked = false;
+            }
+            else if(strcmp(argv[0], "-e"))
+            {
+               if(S_ISREG(sb.st_mode))
+                  worked = true;
+               else if(S_ISDIR(sb.st_mode))
+                  worked = true;
+               else
+                  worked = false;
+            }
+            else
+            {
+               worked = false;
+            }
          }
       }
 };
