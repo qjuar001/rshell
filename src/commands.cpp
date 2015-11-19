@@ -111,8 +111,6 @@ bool commands::parse()
          bool flag = false;        //Determines if a flag exists
          bool bracket = false;     //Determines if there is a bracket
          bool runTestExe = false;
-         //int posBrack = 0;       //Holds the position of the bracket
-         //int j = 0;
          string brackStr(tmp);   //Makes a copy of tmp array and makes it a string
          testCmd checkDef;
          checkDef.checkFlag(tmp, brackStr, flag, bracket); 
@@ -164,10 +162,10 @@ bool commands::parse()
          //If the position in run is true then execute the current cmd     
          if (run[conCnt] == true)
          {
-            if(runTestExe)
+            if(runTestExe) //If checking if a file/directory exists then call the testCmd execute function
             {
               checkDef.execute(argv);
-              worked = checkDef.getWorked(); //FIX ME
+              worked = checkDef.getWorked(); //Save value of test into the worked bool
             }
             else
                execute(argv); //executes the commands
@@ -224,6 +222,3 @@ bool commands::parse()
    }
    return preWorked; //Return a bool for precedence check
 }
-
-
-
