@@ -113,7 +113,6 @@ class testCmd : public cmdWorked
             }
             else
             {
-               perror("Unknown flag");
                worked = false;  //If none of those conditions are met then make worked false
             }
          }

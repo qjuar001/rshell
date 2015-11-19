@@ -1,0 +1,76 @@
+Script started on Thu 19 Nov 2015 10:49:14 AM PST
+[qjuar001@hammer rshell]$ bin/rshell
+
+rshell Copyright (C) 2015 Queston Juarez & Mark Spencer
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.
+
+[qjuar001@hammer.cs.ucr.edu]$ ls; test src && echo yay
+bin  Makefile  README.md  src  test_command  tests
+yay
+[qjuar001@hammer.cs.ucr.edu]$ test -d src && echo yay
+yay
+[qjuar001@hammer.cs.ucr.edu]$ test -f src && echo yay
+[qjuar001@hammer.cs.ucr.edu]$ test -e src && echo yay
+yay
+[qjuar001@hammer.cs.ucr.edu]$ [ src ] && echo yay
+yay
+[qjuar001@hammer.cs.ucr.edu]$ [ -e src ] && echo yay
+yay
+[qjuar001@hammer.cs.ucr.edu]$ [ -d src ] && echo yay
+yay
+[qjuar001@hammer.cs.ucr.edu]$ [ -f src ] && echo yay || echo does not exists
+does not exist
+[qjuar001@hammer.cs.ucr.edu]$ test -f src/Makefile && echo exists
+exists
+[qjuar001@hammer.cs.ucr.edu]$ test -d src/Makefile || echo does not exist
+does not exist
+[qjuar001@hammer.cs.ucr.edu]$ [ -d src/Makefile ] || echo does not exist
+does not exist
+[qjuar001@hammer.cs.ucr.edu]$ test -zv src && echo yay
+stat: No such file or directory
+[qjuar001@hammer.cs.ucr.edu]$ test - src && echo yay
+stat: No such file or directory
+[qjuar001@hammer.cs.ucr.edu]$ []
+stat: Bad address
+[qjuar001@hammer.cs.ucr.edu]$ [] || echo not good
+stat: Bad address
+not good
+[qjuar001@hammer.cs.ucr.edu]$ test || echo not good
+stat: Bad address
+not good
+[qjuar001@hammer.cs.ucr.edu]$ test fakeFile || echo does not exist
+stat: No such file or directory
+does not exist
+[qjuar001@hammer.cs.ucr.edu]$ test test || echo no
+stat: No such file or directory
+no
+[qjuar001@hammer.cs.ucr.edu]$ test tests && echo exists
+exists
+[qjuar001@hammer.cs.ucr.edu]$ [[ src ]] && echo exists
+exists
+[qjuar001@hammer.cs.ucr.edu]$ [ src ]] && echo exists || echo does not exist
+exists
+[qjuar001@hammer.cs.ucr.edu]$ [[ src ] && echo exists
+exists
+[qjuar001@hammer.cs.ucr.edu]$ test -f bin || echo [does not exist]
+stat: No such file or directory
+[qjuar001@hammer.cs.ucr.edu]$ test -f bin || echo does not exist
+does not exist
+[qjuar001@hammer.cs.ucr.edu]$ echo he[llo
+stat: No such file or directory
+[qjuar001@hammer.cs.ucr.edu]$ echo test
+stat: No such file or directory
+[qjuar001@hammer.cs.ucr.edu]$ echo test file
+stat: No such file or directory
+[qjuar001@hammer.cs.ucr.edu]$ echo testFile
+testFile
+[qjuar001@hammer.cs.ucr.edu]$ mkdirrtest; ls
+stat: No such file or directory
+bin  Makefile  README.md  src  test_command  tests
+[qjuar001@hammer.cs.ucr.edu]$ exit
+[qjuar001@hammer rshell]$ exit
+exit
+
+Script done on Thu 19 Nov 2015 10:59:56 AM PST

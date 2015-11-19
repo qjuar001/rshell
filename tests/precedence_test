@@ -1,0 +1,65 @@
+Script started on Thu 19 Nov 2015 11:08:47 AM PST
+]0;qjuar001@hammer:~/rshell[?1034h[qjuar001@hammer rshell]$ exitbin/rshell[6Pexitbin/rshell
+
+rshell Copyright (C) 2015 Queston Juarez & Mark Spencer
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.
+
+[qjuar001@hammer.cs.ucr.edu]$ (ech    echo A && echo B || echo C && echo D
+A
+B
+D
+[qjuar001@hammer.cs.ucr.edu]$ (echo A && echo B) || (echo C && echo D)
+A
+B
+[qjuar001@hammer.cs.ucr.edu]$ (echoA  A; echo B && (ecoh  ho C || echo D))
+A
+B
+C
+[qjuar001@hammer.cs.ucr.edu]$ (
+*** ERROR: exec failed
+[qjuar001@hammer.cs.ucr.edu]$ ()
+Segmentation fault
+]0;qjuar001@hammer:~/rshell[qjuar001@hammer rshell]$ bin/rshell
+
+rshell Copyright (C) 2015 Queston Juarez & Mark Spencer
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.
+
+[qjuar001@hammer.cs.ucr.edu]$ (a)
+*** ERROR: exec failed
+[qjuar001@hammer.cs.ucr.edu]$ (ls - && echo this shouldn't run) && (echo this shoulod  dn't either || echo nope) || (ls; echo this should print && git branch)
+ls: cannot access -: No such file or directory
+bin  Makefile  precedence_test	README.md  src	tests
+this should print
+  exec
+  master
+* test
+[qjuar001@hammer.cs.ucr.edu]$ ((ee  ls && eco ho hello) || echo goodbye)
+bin  Makefile  precedence_test	README.md  src	tests
+hello
+[qjuar001@hammer.cs.ucr.edu]$ (echo using uneven perenth                    testing && echo hii ))
+testing
+hi
+[qjuar001@hammer.cs.ucr.edu]$ ((echo hello)
+Segmentation fault
+]0;qjuar001@hammer:~/rshell[qjuar001@hammer rshell]$ bin/rshell
+
+rshell Copyright (C) 2015 Queston Juarez & Mark Spencer
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.
+
+[qjuar001@hammer.cs.ucr.edu]$ ( echo hello && (echo this || echo goodbye) || echo no  nope ||  && (echo this should print; ls)) && (ls -; git branch             && echo t foo) ||  && echo this should pint
+hello
+this
+this should print
+bin  Makefile  precedence_test	README.md  src	tests
+ls: cannot access -: No such file or directory
+[qjuar001@hammer.cs.ucr.edu]$ exit
+]0;qjuar001@hammer:~/rshell[qjuar001@hammer rshell]$ exit
+exit
+
+Script done on Thu 19 Nov 2015 11:16:42 AM PST
